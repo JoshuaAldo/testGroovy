@@ -1,0 +1,38 @@
+apply plugin: 'war'
+
+dependencies {
+	api "org.springframework.cloud:spring-cloud-starter-config"
+	api "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
+	api "mysql:mysql-connector-java:${mysqlConnectorJava}"
+	api "com.oracle.database.jdbc:ojdbc8:${ojdbc8}"
+	api "org.postgresql:postgresql:${postgresql}"
+	runtimeOnly files("../../product/customer-hub-user-management/build/libs/customer-hub-user-management.jar")
+	runtimeOnly files("../../product/customer-hub-user-management-patching/build/libs/customer-hub-user-management-patching.jar")
+	runtimeOnly files("../../product/iam-user-common/build/libs/iam-user-common.jar")
+	runtimeOnly files("../../product/customer-hub-user-management-common/build/libs/customer-hub-user-management-common.jar")
+	runtimeOnly files("../../product/customer-hub-user-management-entity-common/build/libs/customer-hub-user-management-entity-common.jar")
+	
+	api "org.springframework.cloud:spring-cloud-starter-openfeign"
+	api "org.springframework.boot:spring-boot-starter-web-services"
+	api "ict:component-security:${security}"
+	api "ict:component-scheduler:${scheduler}"
+	api "org.bouncycastle:bcprov-jdk15on:${bouncyCastle}"
+	api "org.bouncycastle:bcpg-jdk15on:${bouncyCastle}"
+	api group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: "${jasyptSpringBootStarter}"
+	
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	providedRuntime('com.zaxxer:HikariCP') { 
+		exclude group: 'org.slf4j', module: 'slf4j-api'
+	}
+	runtimeOnly files('configs')
+	
+}
+
+bootWar {
+    webInf { from 'webapp' }
+}
+
+springBoot {
+    mainClassName = "com.ict.product.customerhub.usermanagement.UserManagementApplication"
+    buildInfo()
+}
